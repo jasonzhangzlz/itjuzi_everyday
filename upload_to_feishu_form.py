@@ -2,12 +2,13 @@ import requests
 
 # 飞书应用的App ID和App Secret
 APP_ID = "cli_a74c7e36f0fe101c"
-APP_SECRET = "vXTakPKzgiQ5ofSPf2S2Gg70WEPjvTfy"
+# APP_SECRET = "vXTakPKzgiQ5ofSPf2S2Gg70WEPjvTfy" # Dummy Secret, deprecated.
+from confidentials import *
 
 # 数据表的唯一标识
 SPREADSHEET_TOKEN = "PLACEHOLDER_TOKEN"
 
-TABLE_ID = 'tblWh58jW0tC65fS'
+TABLE_ID = 'tbl2mh1ztAHQv2W4'
 
 # 获取访问令牌
 def get_access_token():
@@ -54,7 +55,7 @@ def get_access_token():
         print(f"请求失败，状态码：{response.status_code}")
 
 
-def append_data_to_table(app_access_token, table_id, data):
+def append_data_to_table(app_access_token, app_token, table_id, data):
     """
     在飞书多维表格的数据表末尾按行追加数据
 
@@ -63,7 +64,7 @@ def append_data_to_table(app_access_token, table_id, data):
     :param data: 要追加的数据，格式为列表，每个元素是一个字典，表示一行数据
     :return: 响应结果
     """
-    url = f"https://open.feishu.cn/open-apis/bitable/v1/apps/X2S9bPrtMaaRX0srpZact0WTnNd/tables/tbl2mh1ztAHQv2W4/records/batch_create"
+    url = f"https://open.feishu.cn/open-apis/bitable/v1/apps/{app_token}/tables/{table_id}/records/batch_create"
 
     headers = {
         "Authorization": f"Bearer {app_access_token}",
@@ -113,9 +114,9 @@ if __name__ == "__main__":
                 "fields": {
                     "日期": 1740969600000,
                     "概览": "这是第一天的概览信息",
-                    "链接":  {
+                    "原文链接":  {
                         "link": "https://example.com/day1",
-                        # "text": "链接d1"
+                        # "text": "原文链接d1"
                     }
                 }
             },
@@ -123,9 +124,9 @@ if __name__ == "__main__":
                 "fields": {
                     "日期": 1740969600,
                     "概览": "这是第二天的概览信息",
-                    "链接": {
+                    "原文链接": {
                         "link": "https://example.com/day2",
-                        # "text": "链接d2"
+                        # "text": "原文链接d2"
                     }
                 }
             },
@@ -133,14 +134,15 @@ if __name__ == "__main__":
                 "fields": {
                     "日期": 1735689600,
                     "概览": "这是第三天的概览信息",
-                    "链接": {
+                    "原文链接": {
                         "link": "https://example.com/day3",
-                        # "text": "链接d3"
+                        # "text": "原文链接d3"
                     }
                 }
             }
         ]
-    result = append_data_to_table(access_token, TABLE_ID, data_to_append)
+    app_token = 'X2S9bPrtMaaRX0srpZact0WTnNd'
+    result = append_data_to_table(access_token, app_token, TABLE_ID, data_to_append)
     if result:
         print("数据追加成功:", result)
     else:
