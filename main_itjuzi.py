@@ -2,6 +2,7 @@ import re
 import requests
 from lxml import html
 import time
+import sys
 
 # Local imports
 from upload_to_feishu_form import get_access_token, append_data_to_table
@@ -222,6 +223,8 @@ def parse_itjuzi(url):
 
 
 if __name__ == '__main__':
-    url = "https://mp.weixin.qq.com/s?__biz=MjM5ODIwNzUyMw==&mid=2650506037&idx=1&sn=ead6ed9f98198eed84db2785a31ed232&chksm=bfdccf827c7306e696adfc5d93d994d98c9ff44cb0ade9f85b68685c41c8c5475c636ebfb4b8#rd"
+    # url = "https://mp.weixin.qq.com/s?__biz=MjM5ODIwNzUyMw==&mid=2650506037&idx=1&sn=ead6ed9f98198eed84db2785a31ed232&chksm=bfdccf827c7306e696adfc5d93d994d98c9ff44cb0ade9f85b68685c41c8c5475c636ebfb4b8#rd"
+    url = sys.argv[1]
+    print(url)
     exit_code = parse_itjuzi(url)
     print(f'Exit code: {exit_code}')
