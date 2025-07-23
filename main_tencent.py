@@ -145,9 +145,11 @@ def get_url_from_album():
     
     today_date = get_today_date()
     target_string = f"腾讯研究院AI速递 {today_date}"
+    target_string_else = f"腾讯研究院AI速递\xa0{today_date}"
 
     # 发送HTTP请求获取网页内容
     response = requests.get(url=ALBUM_URL, headers=HEADERS)
+    response.raise_for_status()  # 检查请求是否成功
     html_content = response.text
     # with open("output.html", "w", encoding="utf-8") as file:
     #     file.write(response.text)
@@ -157,6 +159,8 @@ def get_url_from_album():
 
     # 查找符合条件的所有元素
     elements = soup.find_all(attrs={"data-title": target_string})
+    if len(elements) == 0:
+        elements = soup.find_all(attrs={"data-title": target_string_else})
     target_element = elements[0] # 网页中的今日推送
     today_url_raw = target_element.get('data-link') 
     return today_url_raw
