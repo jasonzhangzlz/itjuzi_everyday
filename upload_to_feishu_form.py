@@ -78,7 +78,7 @@ def append_data_to_table(app_access_token, app_token, table_id, data):
     try:
         response = requests.post(url, headers=headers, json=payload)
         response.raise_for_status()  # 检查响应状态码
-        return response.json()
+        return response.status_code
     except requests.exceptions.RequestException as e:
         print(f"请求出错: {e}")
         return None

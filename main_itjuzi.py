@@ -219,8 +219,31 @@ def parse_itjuzi(url):
             print(f"Uploaded ITJuzi piece #{i} successfully! Company: {piece['name_company']}")
 
     upload_details(url, domestic_organized)
-    return 0
 
+    def upload_match_company(input_data):
+        for i, piece in enumerate(input_data,1):
+            if len(piece['keywords'])==0:
+                # We only upload target companies (keyword-matched)
+                print(f"ITJUZI Piece #{i} Skipped. Company: {piece['name_company']}")
+                continue
+            
+            # Weave content:
+            data_to_upload = [
+                {
+                    "fields": {
+                            "上传日期": timestamp_ms,
+                            "企业": piece['name_company'],
+                            "联系人爬取结果":""
+                        }
+                }
+            ]
+            state_code = append_data_to_table(access_token, CONTACT_APP_TOKEN, JUZI_MATCH_TABLE_ID, data_to_upload)
+            print(f"Uploaded ITJuzi piece #{i} with status code: {state_code}")
+            print(f"Uploaded ITJuzi piece #{i} successfully! Company: {piece['name_company']}")
+
+    upload_match_company(domestic_organized)
+    
+    return 0
 
 if __name__ == '__main__':
     # url = "https://mp.weixin.qq.com/s?__biz=MjM5ODIwNzUyMw==&mid=2650506037&idx=1&sn=ead6ed9f98198eed84db2785a31ed232&chksm=bfdccf827c7306e696adfc5d93d994d98c9ff44cb0ade9f85b68685c41c8c5475c636ebfb4b8#rd"
@@ -228,3 +251,4 @@ if __name__ == '__main__':
     print(url)
     exit_code = parse_itjuzi(url)
     print(f'Exit code: {exit_code}')
+    
