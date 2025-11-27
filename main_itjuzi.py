@@ -70,8 +70,10 @@ def parse_itjuzi(url):
         return visible_text
     
     # main_body_xpath = "/html/body/div[2]/div[2]/div[2]/div/div[1]/div[2]"
-    domestic_xpath = '/html/body/div[2]/div[2]/div[2]/div/div[1]/div[2]/fieldset[2]/fieldset[1]'
-    international_xpath = '/html/body/div[2]/div[2]/div[2]/div/div[1]/div[2]/fieldset[2]/fieldset[2]/section'
+    domestic_xpath = '/html/body/div[2]/div[2]/div[2]/div/div[1]/div[3]/fieldset[2]/fieldset[1]/fieldset/section/p'
+    # domestic_xpath = '/html/body/div[2]/div[2]/div[2]/div/div[1]/div[2]/fieldset[2]/fieldset[1]'
+    # international_xpath = '/html/body/div[2]/div[2]/div[2]/div/div[1]/div[2]/fieldset[2]/fieldset[2]/section'
+    international_xpath = '/html/body/div[2]/div[2]/div[2]/div/div[1]/div[3]/fieldset[2]/fieldset[2]/section/section[2]'
     domestic_content_list = get_text(doc, domestic_xpath,'DOMESTIC')[1:] # 首个元素是“国内投资速递”，丢弃之
     intl_content_list = get_text(doc, international_xpath, 'INTERNATIONAL')[1:]
     

@@ -44,7 +44,8 @@ def parse_tencent(url):
         link: link to original WeChat public article
     """
 
-    main_body_xpath = "/html/body/div[2]/div[2]/div[2]/div/div[1]/div[2]"  # 替换为实际的正文元素XPath
+    # main_body_xpath = "/html/body/div[2]/div[2]/div[2]/div/div[1]/div[2]"  # 替换为实际的正文元素XPath
+    main_body_xpath = "/html/body/div[2]/div[2]/div[2]/div/div[1]/div[3]" 
     # 获取网页内容
     response = requests.get(url, headers=HEADERS)
     with open("saved_page_debug.html", "w", encoding="utf-8") as file:
