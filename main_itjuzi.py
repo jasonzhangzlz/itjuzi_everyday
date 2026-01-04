@@ -45,6 +45,7 @@ def parse_itjuzi(url):
         file.write(response.text)
     doc = html.fromstring(response.content)
 
+    
 
     # 提取文字
     def get_text(doc_, xpath, debug_msg):
@@ -70,12 +71,38 @@ def parse_itjuzi(url):
         return visible_text
     
     # main_body_xpath = "/html/body/div[2]/div[2]/div[2]/div/div[1]/div[2]"
-    domestic_xpath = '/html/body/div[2]/div[2]/div[2]/div/div[1]/div[3]/fieldset[2]/fieldset[1]/fieldset/section/p'
+    domestic_xpath = '/html/body/div[2]/div[2]/div[2]/div/div[1]/div[3]/fieldset[2]/fieldset[1]/fieldset/section/'
+    # /html/body/div[2]/div[2]/div[2]/div/div[1]/div[3]/fieldset[2]/fieldset[1]/fieldset/section/p[1]
+    # /html/body/div[2]/div[2]/div[2]/div/div[1]/div[3]/fieldset[2]/fieldset[1]/fieldset/section/p[2]
+    # domestic_xpath = '/html/body/div[2]/div[2]/div[2]/div/div[1]/div[3]/fieldset[2]/fieldset[1]/fieldset/section/p[1]'
     # domestic_xpath = '/html/body/div[2]/div[2]/div[2]/div/div[1]/div[2]/fieldset[2]/fieldset[1]'
     # international_xpath = '/html/body/div[2]/div[2]/div[2]/div/div[1]/div[2]/fieldset[2]/fieldset[2]/section'
+    # international_xpath = '/html/body/div[2]/div[2]/div[2]/div/div[1]/div[3]/fieldset[2]/fieldset[2]/section/section[2]'
     international_xpath = '/html/body/div[2]/div[2]/div[2]/div/div[1]/div[3]/fieldset[2]/fieldset[2]/section/section[2]'
-    international_xpath = '/html/body/div[2]/div[2]/div[2]/div/div[1]/div[3]/fieldset[2]/fieldset[2]/section'
-    domestic_content_list = get_text(doc, domestic_xpath,'DOMESTIC')[1:] # 首个元素是“国内投资速递”，丢弃之
+    
+    # Initialize the domestic_content_list before using it
+    domestic_content_list = []
+    
+    # 提取国内文字
+    # Extract all p tags under domestic_xpath
+    p_tags = doc.xpath(domestic_xpath + 'p')
+    for p in p_tags:
+        # Convert the HtmlElement to a temporary XPath to get its text
+        # We'll create a custom function to extract text from the HtmlElement directly
+        visible_text = [
+            text.strip() 
+            for text in p.xpath('.//text()') 
+            if text.strip()
+        ]
+        with open("tmp_itjuzi_extracted", "a", encoding="utf-8") as file:
+            file.write(f'\n\n*** [DOMESTIC], Element: {p.tag}***\n')
+            file.write('\n'.join(visible_text))
+        # Skip the first element which is "国内投资速递" if it exists
+        if len(visible_text) > 1:
+            domestic_content_list.extend(visible_text[1:])
+        else:
+            domestic_content_list.extend(visible_text)
+    
     intl_content_list = get_text(doc, international_xpath, 'INTERNATIONAL')[1:]
     
     def organize_text(text_list, match_keywords=True):
@@ -249,8 +276,8 @@ def parse_itjuzi(url):
     return 0
 
 if __name__ == '__main__':
-    # url = "https://mp.weixin.qq.com/s?__biz=MjM5ODIwNzUyMw==&mid=2650506037&idx=1&sn=ead6ed9f98198eed84db2785a31ed232&chksm=bfdccf827c7306e696adfc5d93d994d98c9ff44cb0ade9f85b68685c41c8c5475c636ebfb4b8#rd"
-    url = sys.argv[1]
+    url = "https://mp.weixin.qq.com/s/n3xH8sKcmIbHLPqiGJZODw"
+    # url = sys.argv[1]
     print(url)
     exit_code = parse_itjuzi(url)
     print(f'Exit code: {exit_code}')
